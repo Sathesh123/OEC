@@ -13,7 +13,6 @@ namespace RL.Backend.Controllers;
 [Route("[controller]")]
 public class PlanController : ControllerBase
 {
-    //CheckPush
     private readonly ILogger<PlanController> _logger;
     private readonly RLContext _context;
     private readonly IMediator _mediator;

@@ -1,4 +1,6 @@
-const api_url = "http://localhost:10010";
+//const api_url = "http://localhost:10010";
+//44343
+const api_url = "https://localhost:44343";
 
 export const startPlan = async () => {
     const url = `${api_url}/Plan`;
@@ -29,6 +31,34 @@ export const addProcedureToPlan = async (planId, procedureId) => {
     });
 
     if (!response.ok) throw new Error("Failed to create plan");
+
+    return true;
+};
+
+export const getUserProcedure = async (procedureId, planId) => {
+    const url = `${api_url}/UserProcedure?$filter=procedureId eq ${procedureId} and planId eq ${planId}&$expand=user`;
+    const response = await fetch(url, {
+        method: "GET",
+    });
+
+    if (!response.ok) throw new Error("Failed to get Users with procedures");
+
+    return await response.json();
+};
+
+export const addUsersToProcedure = async (procedureId, userId, planId) => {
+    const url = `${api_url}/UserProcedure/AddUsersToProcedure`;
+    var command = { procedureId: procedureId,  userId: userId , planId: planId};
+    const response = await fetch(url, {
+        method: "POST",
+        headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(command),
+    });
+
+    if (!response.ok) throw new Error("Failed to Assign Users to Procedure");
 
     return true;
 };
