@@ -827,6 +827,38 @@ namespace RL.Data.Migrations
                         });
                 });
 
+            modelBuilder.Entity("RL.Data.DataModels.UserPlanProcedure", b =>
+                {
+                    b.Property<int>("UserPlanProcedureId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("PlanId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ProcedureId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("UpdateDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("UserPlanProcedureId");
+
+                    b.HasIndex("PlanId");
+
+                    b.HasIndex("ProcedureId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserPlanProcedures");
+                });
+
             modelBuilder.Entity("RL.Data.DataModels.PlanProcedure", b =>
                 {
                     b.HasOne("RL.Data.DataModels.Plan", "Plan")
@@ -844,6 +876,33 @@ namespace RL.Data.Migrations
                     b.Navigation("Plan");
 
                     b.Navigation("Procedure");
+                });
+
+            modelBuilder.Entity("RL.Data.DataModels.UserPlanProcedure", b =>
+                {
+                    b.HasOne("RL.Data.DataModels.Plan", "Plan")
+                        .WithMany()
+                        .HasForeignKey("PlanId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("RL.Data.DataModels.Procedure", "Procedure")
+                        .WithMany()
+                        .HasForeignKey("ProcedureId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("RL.Data.DataModels.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Plan");
+
+                    b.Navigation("Procedure");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("RL.Data.DataModels.Plan", b =>

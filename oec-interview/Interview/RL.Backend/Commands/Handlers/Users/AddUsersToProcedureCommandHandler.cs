@@ -29,12 +29,8 @@ public class AddUsersToProcedureCommandHandler : IRequestHandler<AddUsersToProce
             if (request.UserId < 1)
                 return ApiResponse<Unit>.Fail(new BadRequestException("Invalid UserId"));
 
-            var plan = await _context.Plans
-                .Include(p => p.PlanProcedures)
-                .FirstOrDefaultAsync(p => p.PlanId == request.PlanId);
-            var procedure = await _context.Procedures
-                .Include(p => p.UserProcedures).
-                FirstOrDefaultAsync(p => p.ProcedureId == request.ProcedureId);
+            var plan = await _context.Plans.FirstOrDefaultAsync(p => p.PlanId == request.PlanId);
+            var procedure = await _context.Procedures.FirstOrDefaultAsync(p => p.ProcedureId == request.ProcedureId);
             var user = await _context.Users.FirstOrDefaultAsync(p => p.UserId == request.UserId);
 
             if (plan is null)
@@ -46,13 +42,9 @@ public class AddUsersToProcedureCommandHandler : IRequestHandler<AddUsersToProce
             if (user is null)
                 return ApiResponse<Unit>.Fail(new NotFoundException($"ProcedureId: {request.UserId} not found"));
 
-            //Already has the User, so just succeed
-            if (procedure.UserProcedures.Any(p => p.UserId == user.UserId))
-                return ApiResponse<Unit>.Succeed(new Unit());
-
-            procedure.UserProcedures.Add(new UserPlanProcedure
+            _context.UserPlanProcedures.Add(new UserPlanProcedure
             {
-                //ProcedureId = procedure.ProcedureId,
+                ProcedureId = procedure.ProcedureId,
                 UserId = user.UserId,
                 PlanId = plan.PlanId
             });

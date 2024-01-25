@@ -28,8 +28,7 @@ public class RLContext : DbContext
 
         builder.Entity<UserPlanProcedure>(typeBuilder =>
         {
-            typeBuilder.HasKey(pp => new { pp.PlanId, pp.UserId });
-            typeBuilder.HasOne(pp => pp.Procedure).WithMany(p => p.UserProcedures);
+            typeBuilder.HasKey(pp => new { pp.UserPlanProcedureId });
         });
 
         //Add procedure Seed Data
