@@ -10,6 +10,8 @@ public class RLContext : DbContext
     public DbSet<Procedure> Procedures { get; set; }
     public DbSet<User> Users { get; set; }
 
+    public DbSet<UserPlanProcedure> UserPlanProcedures { get; set; }
+
     public RLContext() { }
     public RLContext(DbContextOptions<RLContext> options) : base(options) { }
 
@@ -22,6 +24,12 @@ public class RLContext : DbContext
             typeBuilder.HasKey(pp => new { pp.PlanId, pp.ProcedureId });
             typeBuilder.HasOne(pp => pp.Plan).WithMany(p => p.PlanProcedures);
             typeBuilder.HasOne(pp => pp.Procedure).WithMany();
+        });
+
+        builder.Entity<UserPlanProcedure>(typeBuilder =>
+        {
+            typeBuilder.HasKey(pp => new { pp.PlanId, pp.UserId });
+            typeBuilder.HasOne(pp => pp.Procedure).WithMany(p => p.UserProcedures);
         });
 
         //Add procedure Seed Data
